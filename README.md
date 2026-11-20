@@ -3,13 +3,6 @@
 > **Hệ thống Quản trị Đào tạo, Học tập, Điểm số và Đánh giá Phỏng vấn Kỹ thuật Hợp nhất**  
 > Dự án được xây dựng trên nền tảng công nghệ hiện đại: **.NET 8 Web API + React 19 + TypeScript + Tailwind CSS + SQL Server 2022 + Google Gemini AI**.
 
-[![.NET 8](https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
-[![React 19](https://img.shields.io/badge/React-19.0-61DAFB?logo=react&logoColor=black)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-[![SQL Server](https://img.shields.io/badge/SQL_Server-2022-CC292B?logo=microsoftsqlserver&logoColor=white)](https://www.microsoft.com/sql-server/)
-[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
-
 ---
 
 ## 📖 Mục lục
@@ -18,8 +11,6 @@
 2. [Các Phân hệ Tính năng Nổi bật](#-các-phân-hệ-tính-năng-nổi-bật)
 3. [Hướng dẫn Khởi động Nhanh](#-hướng-dẫn-khởi-động-nhanh)
    - [Cách 1: Đóng gói & Chạy bằng Docker Compose (Khuyến nghị)](#cách-1-đóng-gói--chạy-bằng-docker-compose-khuyến-nghị)
-   - [Cách 2: Chạy tự động qua Script Windows (One-Click)](#cách-2-chạy-tự-động-qua-script-windows-one-click)
-   - [Cách 3: Chạy thủ công từng phân hệ bằng CLI](#cách-3-chạy-thủ-công-từng-phân-hệ-bằng-cli)
 4. [Cơ sở Dữ liệu & Script Khởi tạo](#-cơ-sở-dữ-liệu--script-khởi-tạo)
 5. [Tài khoản Kiểm thử Mặc định (Credentials)](#-tài-khoản-kiểm-thử-mặc-định-credentials)
 6. [Quy chuẩn Thiết kế & Phát triển (AI Guidelines)](#-quy-chuẩn-thiết-kế--phát-triển-ai-guidelines)
@@ -130,48 +121,6 @@ Dừng hệ thống:
 ```bash
 docker compose down
 ```
-
----
-
-### Cách 2: Chạy tự động qua Script Windows (One-Click)
-
-Nếu làm việc trực tiếp trên môi trường Windows và đã có SQL Server local:
-
-1. Chạy file khởi động:
-   ```bat
-   run.bat
-   ```
-2. Để dừng toàn bộ các tiến trình đang chạy:
-   ```bat
-   stop.bat
-   ```
-
-- 🌐 **Giao diện Web Portal**: [http://localhost:5173](http://localhost:5173)
-- 📑 **Tài liệu Backend Swagger**: [http://localhost:5172/swagger](http://localhost:5172/swagger)
-
----
-
-### Cách 3: Chạy thủ công từng phân hệ bằng CLI
-
-#### 1. Khởi động Backend (.NET 8 Web API):
-
-```bash
-cd Backend
-dotnet restore
-dotnet run --launch-profile http
-```
-
-_(Backend sẽ lắng nghe tại `http://localhost:5172`)_
-
-#### 2. Khởi động Frontend (React 19 + Vite):
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-_(Frontend sẽ lắng nghe tại `http://localhost:5173`)_
 
 ---
 
