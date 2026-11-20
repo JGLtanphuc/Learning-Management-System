@@ -127,7 +127,7 @@ docker compose down
 ## 🗄️ Cơ sở Dữ liệu & Script Khởi tạo
 
 Toàn bộ CSDL của hệ thống được quản lý tập trung tại tệp:  
-📁 **[`database/FAS_System_Database_Init.sql`](./database/FAS_System_Database_Init.sql)**
+📁 **[`database/FAS_System.sql`](./database/FAS_System.sql)**
 
 ### Các bảng dữ liệu chính (22 Tables):
 
@@ -142,7 +142,7 @@ Toàn bộ CSDL của hệ thống được quản lý tập trung tại tệp:
 ### Hướng dẫn khởi tạo thủ công bằng SSMS / Azure Data Studio:
 
 1. Mở **SQL Server Management Studio (SSMS)** và kết nối tới máy chủ SQL Server của bạn.
-2. Mở file `database/FAS_System_Database_Init.sql`.
+2. Mở file `database/FAS_System.sql`.
 3. Nhấn **Execute (F5)** để tự động tạo Database `[StarterProjectDb]`, toàn bộ cấu trúc 22 bảng cùng 1,596 bản ghi dữ liệu mẫu.
 
 ---
