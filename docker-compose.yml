@@ -1,0 +1,81 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: fas_sqlserver #Đặt tên
+    restart: always #Tự khởi động lại container nếu bị dừng
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=Password123!
+    ports:
+      - "14333:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+    healthcheck: #Kiểm tra tình trạng của container SQL Server
+      test:
+        [
+          "CMD-SHELL",
+          "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'Password123!' -C -Q 'SELECT 1'",
+        ]
+      interval: 10s #Kiểm tra mỗi 10 giây
+      timeout: 5s #Thời gian chờ phản hồi
+      retries: 5 #Số lần thử lại
+      start_period: 15s #Thời gian chờ trước khi bắt đầu kiểm tra
+
+  sqlserver-init:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: fas_sqlserver_init
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    environment:
+      - LANG=en_US.UTF-8
+      - LC_ALL=en_US.UTF-8
+    volumes:
+      - ./database/FAS_System.sql:/init.sql # Di chuyển file SQL khởi tạo vào container
+    entrypoint: >
+      /bin/bash -c "
+      export LANG=en_US.UTF-8 && export LC_ALL=en_US.UTF-8 &&
+      echo 'Đang khởi tạo Database StarterProjectDb và toàn bộ 22 bảng dữ liệu mẫu...' &&
+      /opt/mssql-tools18/bin/sqlcmd -S sqlserver -U sa -P 'Password123!' -C -i /init.sql &&
+      echo 'Khởi tạo Database thành công!'
+      "
+    restart: "no" # Chỉ cần chạy 1 lần
+
+  backend:
+    build:
+      context: ./Backend
+      dockerfile: Dockerfile
+    container_name: fas_backend
+    restart: always
+    ports:
+      - "5172:8080"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      # Kết nối trực tiếp vào container sqlserver trong mạng nội bộ Docker
+      - ConnectionStrings__StarterProjectDb=Server=sqlserver,1433;Database=StarterProjectDb;User Id=sa;Password=Password123!;TrustServerCertificate=True
+      - JwtSettings__SecretKey=DayLaKhoaBiMatChoJwtFASSystemRatLaDaiVaBaoMat2026!@#
+      - JwtSettings__Issuer=FAS_Backend
+      - JwtSettings__Audience=FAS_Frontend
+      - JwtSettings__AccessTokenExpirationMinutes=1440
+      - GeminiSettings__ApiKey=${GEMINI_API_KEY:-}
+      - GeminiSettings__Model=models/gemini-3.8-live
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=http://localhost:5172/api
+    container_name: fas_frontend
+    restart: always
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  mssql_data:

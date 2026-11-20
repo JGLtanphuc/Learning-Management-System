@@ -1,0 +1,170 @@
+import { interviewAssignmentApi, interviewTopicApi, classApi } from "@/api";
+import {
+  auditableFieldsSchema,
+  type EntityConfig,
+  type EntitySchema,
+  type FieldSchema,
+} from "@/types";
+import { interviewAssignmentValidation } from "@/validations";
+import { AssignmentSubmissionsPage } from "./pages/AssignmentSubmissionsPage";
+
+const interviewAssignmentSchema: EntitySchema = {
+  entityName: "interview-assignment",
+  idField: "id",
+  fields: [
+    {
+      name: "title",
+      label: "Tiêu đề đợt đánh giá",
+      type: "text",
+      required: true,
+      sortable: true,
+      bold: true,
+      placeholder: "VD: Đánh Giá Kỹ Thuật Java Fresher - Đợt 1",
+      validation: interviewAssignmentValidation.title,
+    },
+    {
+      name: "topicId",
+      label: "Chủ đề câu hỏi",
+      type: "relation",
+      required: true,
+      relation: {
+        api: interviewTopicApi,
+        valueField: "id",
+        labelField: "name",
+      },
+      visible: false,
+      hideable: false,
+      filterable: true,
+      filterType: "select",
+      validation: interviewAssignmentValidation.topicId,
+    },
+    {
+      name: "topicName",
+      label: "Chủ đề",
+      type: "text",
+      editable: false,
+      sortable: true,
+      bold: true,
+    },
+    {
+      name: "classId",
+      label: "Lớp đào tạo",
+      type: "relation",
+      relation: {
+        api: classApi,
+        valueField: "id",
+        labelField: "className",
+      },
+      visible: false,
+      hideable: false,
+      filterable: true,
+      filterType: "select",
+    },
+    {
+      name: "className",
+      label: "Lớp áp dụng",
+      type: "text",
+      editable: false,
+      sortable: true,
+      placeholder: "Để trống nếu áp dụng cho toàn bộ",
+    },
+    {
+      name: "durationMinutes",
+      label: "Thời gian (phút)",
+      type: "number",
+      required: true,
+      sortable: true,
+      validation: interviewAssignmentValidation.durationMinutes,
+    },
+    {
+      name: "totalQuestions",
+      label: "Tổng số câu hỏi",
+      type: "number",
+      required: true,
+      sortable: true,
+      validation: interviewAssignmentValidation.totalQuestions,
+    },
+    {
+      name: "easyCount",
+      label: "Số câu Dễ",
+      type: "number",
+      required: true,
+      sortable: false,
+      validation: interviewAssignmentValidation.easyCount,
+    },
+    {
+      name: "mediumCount",
+      label: "Số câu Trung bình",
+      type: "number",
+      required: true,
+      sortable: false,
+      validation: interviewAssignmentValidation.mediumCount,
+    },
+    {
+      name: "hardCount",
+      label: "Số câu Khó",
+      type: "number",
+      required: true,
+      sortable: false,
+      validation: interviewAssignmentValidation.hardCount,
+    },
+    {
+      name: "passingScore",
+      label: "Điểm đạt",
+      type: "number",
+      required: true,
+      sortable: true,
+      validation: interviewAssignmentValidation.passingScore,
+    },
+    {
+      name: "status",
+      label: "Trạng thái",
+      type: "select",
+      sortable: true,
+      filterable: true,
+      filterType: "select",
+      filterOptions: [
+        { label: "Bản nháp (Draft)", value: "DRAFT" },
+        { label: "Đã mở (Published)", value: "PUBLISHED" },
+        { label: "Đã đóng (Closed)", value: "CLOSED" },
+      ],
+      options: [
+        { label: "Bản nháp (Draft)", value: "DRAFT" },
+        { label: "Đã mở (Published)", value: "PUBLISHED" },
+        { label: "Đã đóng (Closed)", value: "CLOSED" },
+      ],
+    },
+    {
+      name: "totalSubmissions",
+      label: "Số bài nộp",
+      type: "number",
+      editable: false,
+      sortable: false,
+    },
+    {
+      name: "averageScore",
+      label: "Điểm TB",
+      type: "number",
+      editable: false,
+      sortable: false,
+    },
+    ...(auditableFieldsSchema as FieldSchema[]),
+  ],
+};
+
+export const entityConfig: EntityConfig = {
+  name: "Interview Assignment",
+  path: "/interview-assignments",
+  api: interviewAssignmentApi,
+  schema: interviewAssignmentSchema,
+  permissionOverrides: {
+    canImport: false,
+  },
+  actionPages: {
+    detail: {
+      path: "/interview-assignments/:id/detail",
+      component: AssignmentSubmissionsPage,
+      requiredPermission: "INTERVIEW_ASSIGNMENT_REVIEW",
+    },
+  },
+};
