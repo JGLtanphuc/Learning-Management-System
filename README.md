@@ -1,4 +1,4 @@
-# Fresher Academy System (FAS System)
+# Learning Management System
 
 > **Hệ thống Quản trị Đào tạo, Học tập, Điểm số và Đánh giá Phỏng vấn Kỹ thuật Hợp nhất**  
 > Dự án được xây dựng trên nền tảng công nghệ hiện đại: **.NET 8 Web API + React 19 + TypeScript + Tailwind CSS + SQL Server 2022 + Google Gemini AI**.
